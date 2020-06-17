@@ -12,17 +12,17 @@ def calculateAge(dob):
     born=date(int(dob[0]),int(dob[1]),int(dob[2]))
     today=date.today()
     try:
+        #checking if birthyear is a leap year and birthdate is feb 29
         birthday=born.replace(year=today.year)
 
     except:
+        #caught if feb 29 
         birthday = born.replace(month=born.month+1,year=today.year,day=1)
     
     if birthday > today:
         return today.year-born.year-1
     else:
         return today.year-born.year
-
-
 
 
 def main():
@@ -50,7 +50,7 @@ def main():
         atts=player.strip().split(',')
         
         player_dict={
-            '_id':atts[0],
+            '_id':int(atts[0]),
             'name':atts[1],
             'age':calculateAge(atts[2])       
             }

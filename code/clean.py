@@ -6,7 +6,18 @@ import pymongo
     
 def main():
     myClient=pymongo.MongoClient("mongodb://localhost:27017")
-    
+    myDb=myClient['IPL']
+    myCol=myDb['players']
+    existing=list(myCol.find({},{'_id':0,'name':1}))
+    latestid=myCol.aggregate([
+        {'$group':{
+            '_id':None,
+            'maxi':{'$max':'$_id'}
+            }
+        },
+        {'$project':{'maxi':1,'_id':0}}
+    ])
+    latest_id=list(latestid)[0]['maxi']
 
     all_files=[]
     for file in glob.glob("../Data/ipl/*.yaml"):
@@ -36,8 +47,18 @@ def main():
         except:
             errors.append(f)
     
-    print(players)
-    print(len(players))
+    existing_players=[]
+    for e in existing:    
+        existing_players.append(e['name'])
+
+    
+        
+    for player in players:
+        if player not in existing_players:
+            latest_id=latest_id+1
+            myCol.insert_one({'_id':latest_id,'name':player})
+        
+        
     
     
 
