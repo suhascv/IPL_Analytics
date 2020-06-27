@@ -4,11 +4,24 @@ import glob
 from datetime import date
 
 
+
+def getDeliveries(data):
+    deliveries={}
+    for d in data:
+        key = list(d.keys())[0]
+        deliveries[str(key).replace('.','_')]=d[key]
+    return deliveries
+
+
+
+
+
+
 def main():
-    myClient = pymongo.MongoClient("mongodb://localhost:27107")
+    myClient = pymongo.MongoClient("mongodb://localhost:27017")
     myDb     = myClient['IPL']
-    matches  = myDb['mathces']
-    players  = myDb['players']
+    Matches  = myDb['matches']
+    print('db connected')
 
     all_files=[]
     for file in glob.glob("../Data/ipl/*.yaml"):
@@ -16,11 +29,13 @@ def main():
         file_name=file.strip('../Data/ipl/').strip('.yaml')
         all_files.append(int(file_name))
 
+    #sorting_files
     all_files.sort()
 
     match_id=1
     matches=[]
-    error_ids=[]
+    
+
     for f in all_files:
         file=open("../Data/ipl/"+str(f)+'.yaml')
         data=yaml.load(file, Loader=yaml.FullLoader)
@@ -45,15 +60,40 @@ def main():
             match['player_of_match']=info['player_of_match'][0]
         else:
             match['result']=info['outcome']['result']
-            print(match)
-       
-       
 
+            
+        if 'innings' in data:
+            if len(data['innings'])==1:
+                innings1={
+                    'team':data['innings'][0]['1st innings']['team'],
+                    'deliveries':getDeliveries(data['innings'][0]['1st innings']['deliveries'])
+                    }
+                match['1st_innings']=innings1
+
+            if len(data['innings'])==2:
+                innings1={
+                    'team':data['innings'][0]['1st innings']['team'],
+                    'deliveries':getDeliveries(data['innings'][0]['1st innings']['deliveries'])
+                    }
+                match['1st_innings']=innings1
+                innings2={
+                    'team':data['innings'][1]['2nd innings']['team'],
+                    'deliveries':getDeliveries(data['innings'][1]['2nd innings']['deliveries'])
+                    }
+                match['2nd_innings']=innings2
+
+        
         matches.append(match)
         match_id+=1
+    
+    Matches.insert_many(matches)
+    print('matches loaded')
+    
+    
+        
         
     
-    print(error_ids)
+
   
 
         
