@@ -25,27 +25,37 @@ def main():
         file=open("../Data/ipl/"+str(f)+'.yaml')
         data=yaml.load(file, Loader=yaml.FullLoader)
         info= data['info']
-
         try:
-            match={
+            season =info['dates'][0].year
+        except:
+            season= int(info['dates'][0].split('-')[0])
+        
+        match={
                 '_id':match_id,
-                'season':info['dates'][0].year,
+                'season':season,
                 'home_team':info['teams'][0],
                 'away_team':info['teams'][1],
                 'toss_won':info['toss']['winner'],
                 'toss_decision':info['toss']['decision'],
-                'winner':info['outcome']['winner'],
-                'won_by':info['outcome']['by'],
-                'player_of_match':info['player_of_match'][0]
-                }
-        except:
-            error_ids.append(f)
+            }
+            
+        if 'winner' in info['outcome']:
+            match['winner']=info['outcome']['winner']
+            match['won_by']=info['outcome']['by']
+            match['player_of_match']=info['player_of_match'][0]
+        else:
+            match['result']=info['outcome']['result']
+            print(match)
+       
+       
 
         matches.append(match)
         match_id+=1
         
     
     print(error_ids)
+  
+
         
 
 if __name__ =='__main__':
