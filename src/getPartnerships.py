@@ -137,15 +137,8 @@ def main():
 
     print('db connected')
 
-
+    
     query=[
-        {'$match':
-            {'$or':[
-                    {"1st_innings":{'$exists':True},
-                    "2nd_innings":{'$exists':True}}
-                    ]
-            }
-        },
         {'$project':{'_id':1,
                     "1st_innings.deliveries":1,
                     "2nd_innings.deliveries":1}}
@@ -156,6 +149,7 @@ def main():
     all_partnerships=[]
 
     pid=1
+    i=0
     for d in deliveries:
         match_id = d["_id"]
         chased=False
@@ -164,15 +158,17 @@ def main():
         if "won_by" in res:
             if "wickets" in res['won_by']:
                 chased=True
-        
-        pid,partnerships=inningsParnerships(d["1st_innings"]["deliveries"],False,match_id,pid,Players)
-        all_partnerships+=partnerships
-        pid,partnerships=inningsParnerships(d["2nd_innings"]["deliveries"],chased,match_id,pid,Players)
-        all_partnerships+=partnerships
-        
+        if "1st_innings" in d:
+            pid,partnerships=inningsParnerships(d["1st_innings"]["deliveries"],False,match_id,pid,Players)
+            all_partnerships+=partnerships
+        if "2nd_innings" in d:
+            pid,partnerships=inningsParnerships(d["2nd_innings"]["deliveries"],chased,match_id,pid,Players)
+            all_partnerships+=partnerships
+        i+=1
     
     Partnerships.insert_many(all_partnerships)
-    print('partnerships collection loaded and players stats updated')
+    
+    print('partnerships collection loaded and players stats updated',i)
         
 if __name__=='__main__':
     main()
