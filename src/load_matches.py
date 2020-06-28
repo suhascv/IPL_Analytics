@@ -14,9 +14,6 @@ def getDeliveries(data):
 
 
 
-
-
-
 def main():
     myClient = pymongo.MongoClient("mongodb://localhost:27017")
     myDb     = myClient['IPL']
