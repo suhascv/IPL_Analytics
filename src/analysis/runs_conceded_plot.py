@@ -16,7 +16,7 @@ def main():
         avg_overs['over'+str(i)+'_avg']={'$avg':'$over'+str(i)}
         overs.append(i)
     
-    query=[{'$match':{'season':2019}},
+    query=[{'$match':{'season':{'$in':[2019,2018]}}},
         {'$group':avg_overs}]
 
     runs_by_team=list(Runs_Conceded.aggregate(query))
