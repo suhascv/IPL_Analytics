@@ -4,12 +4,13 @@ import pymongo
 runs conceded by each over
 """
 
-def getDocument(runs,oid,match_id,team):
+def getDocument(runs,oid,match_id,team,season):
     i=1
     runs_conceded={
         '_id':oid,
         'match_id':match_id,
         'team':team,
+        'season':season
     }
     for r in runs:
         runs_conceded['over'+str(i)]=r
@@ -52,7 +53,7 @@ def main():
         home_team=m['home_team']
         away_team=m['away_team']
         match_id=m['_id']
-        
+        season=m['season']
         if '1st_innings' in m:
             batting_team=m['1st_innings']['team']
             if batting_team==home_team:
@@ -61,7 +62,7 @@ def main():
                 bowling_team = home_team
             
             runs=getRunsByOver(m['1st_innings']['deliveries'])
-            all_overs.append(getDocument(runs,oid,match_id,bowling_team))
+            all_overs.append(getDocument(runs,oid,match_id,bowling_team,season))
             oid+=1
         
         if '2nd_innings' in m:
@@ -72,7 +73,7 @@ def main():
                 bowling_team = home_team
             
             runs=getRunsByOver(m['2nd_innings']['deliveries'])
-            all_overs.append(getDocument(runs,oid,match_id,bowling_team))
+            all_overs.append(getDocument(runs,oid,match_id,bowling_team,season))
             oid+=1
 
     Runs_conceded.insert_many(all_overs)
