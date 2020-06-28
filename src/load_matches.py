@@ -67,7 +67,7 @@ def main():
                     }
                 match['1st_innings']=innings1
 
-            if len(data['innings'])==2:
+            elif len(data['innings'])==2:
                 innings1={
                     'team':data['innings'][0]['1st innings']['team'],
                     'deliveries':getDeliveries(data['innings'][0]['1st innings']['deliveries'])
@@ -78,7 +78,21 @@ def main():
                     'deliveries':getDeliveries(data['innings'][1]['2nd innings']['deliveries'])
                     }
                 match['2nd_innings']=innings2
-
+            
+            elif len(data['innings'])==4:
+                #super_overs
+                super_ings1 =list(data['innings'][2].keys())[0]
+                super_in1={
+                            'team':data['innings'][2][super_ings1]['team'],
+                            'deliveries':getDeliveries(data['innings'][2][super_ings1]['deliveries'])
+                        } 
+                super_ings2=list(data['innings'][3].keys())[0]
+                super_in2={
+                            'team':data['innings'][3][super_ings2]['team'],
+                            'deliveries':getDeliveries(data['innings'][3][super_ings2]['deliveries'])
+                        }
+                match['super_in1']=super_in1
+                match['super_in2']=super_in2
         
         matches.append(match)
         match_id+=1

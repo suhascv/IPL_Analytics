@@ -138,14 +138,7 @@ def main():
     print('db connected')
 
     
-    query=[
-        {'$project':{'_id':1,
-                    "1st_innings.deliveries":1,
-                    "2nd_innings.deliveries":1}}
-    ]
-
-
-    deliveries = list(Matches.aggregate(query))
+    deliveries = list(Matches.find())
     all_partnerships=[]
 
     pid=1
@@ -164,6 +157,16 @@ def main():
         if "2nd_innings" in d:
             pid,partnerships=inningsParnerships(d["2nd_innings"]["deliveries"],chased,match_id,pid,Players)
             all_partnerships+=partnerships
+
+        #super_overs
+        if "super_in1" in d:
+            pid,partnerships=inningsParnerships(d["super_in1"]["deliveries"],False,match_id,pid,Players)
+            all_partnerships+=partnerships
+        if "super_in2" in d:
+            pid,partnerships=inningsParnerships(d["super_in2"]["deliveries"],False,match_id,pid,Players)
+            all_partnerships+=partnerships
+
+
         i+=1
     
     Partnerships.insert_many(all_partnerships)
