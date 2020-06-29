@@ -90,7 +90,7 @@ def updatePlayer(Players,partnership_info,partnership):
 
 
 
-def inningsParnerships(innings1,chased,match_id,pid,Players):
+def inningsPartnerships(innings1,chased,match_id,pid,Players):
     #initializing partnership
     partner1= innings1['0_1']["batsman"]
     partner2=innings1['0_1']["non_striker"]
@@ -152,18 +152,18 @@ def main():
             if "wickets" in res['won_by']:
                 chased=True
         if "1st_innings" in d:
-            pid,partnerships=inningsParnerships(d["1st_innings"]["deliveries"],False,match_id,pid,Players)
+            pid,partnerships=inningsPartnerships(d["1st_innings"]["deliveries"],False,match_id,pid,Players)
             all_partnerships+=partnerships
         if "2nd_innings" in d:
-            pid,partnerships=inningsParnerships(d["2nd_innings"]["deliveries"],chased,match_id,pid,Players)
+            pid,partnerships=inningsPartnerships(d["2nd_innings"]["deliveries"],chased,match_id,pid,Players)
             all_partnerships+=partnerships
 
         #super_overs
         if "super_in1" in d:
-            pid,partnerships=inningsParnerships(d["super_in1"]["deliveries"],False,match_id,pid,Players)
+            pid,partnerships=inningsPartnerships(d["super_in1"]["deliveries"],False,match_id,pid,Players)
             all_partnerships+=partnerships
         if "super_in2" in d:
-            pid,partnerships=inningsParnerships(d["super_in2"]["deliveries"],False,match_id,pid,Players)
+            pid,partnerships=inningsPartnerships(d["super_in2"]["deliveries"],False,match_id,pid,Players)
             all_partnerships+=partnerships
 
 
