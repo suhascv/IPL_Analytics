@@ -23,6 +23,9 @@ def getDocument(runs,oid,match_id,team,season):
 
 
 def getRunsByOver(deliveries):
+    """
+    loops through each deliveries and exracts the runs scored
+    """
     runs_by_over=[]
     runs=0
     for d in deliveries:

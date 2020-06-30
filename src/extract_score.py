@@ -5,6 +5,9 @@ runs scored by each over at that point of the match
 """
 
 def getDocument(runs,oid,match_id,home_team,away_team,season,batting_team,bowling_team):
+    """
+    creates runs_scored instances
+    """
     i=1
     docs=[]
     for r in runs:
@@ -30,6 +33,9 @@ def getDocument(runs,oid,match_id,home_team,away_team,season,batting_team,bowlin
 
 
 def getRunsByOver(deliveries):
+    """
+    loops through each deliveries and exracts the runs scored
+    """
     runs_by_over=[]
     runs=0
     for d in deliveries:
@@ -45,6 +51,7 @@ def getRunsByOver(deliveries):
 
 
 def main():
+    #database connection
     myClient = pymongo.MongoClient("mongodb://localhost:27017")
     myDb= myClient['IPL']
     Matches= myDb['matches']
