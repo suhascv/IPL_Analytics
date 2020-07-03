@@ -49,6 +49,7 @@ def main():
                 'away_team':info['teams'][1],
                 'toss_won':info['toss']['winner'],
                 'toss_decision':info['toss']['decision'],
+                'venue':info['venue']
             }
             
         if 'winner' in info['outcome']:

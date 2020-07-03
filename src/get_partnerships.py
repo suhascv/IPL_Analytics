@@ -22,7 +22,7 @@ def getInfo(partner1,partner2):
      }
 
 
-def loadPartnership(partnership,partnership_info,match_id,pid,finishing):
+def loadPartnership(partnership,partnership_info,match_id,pid,finishing,venue):
     """
     loads to partnership document to partnerships collection
     """
@@ -54,6 +54,7 @@ def loadPartnership(partnership,partnership_info,match_id,pid,finishing):
     partnership_doc={
         '_id':pid,
         'match_id':match_id,
+        'venue':venue,
         'partner1':partner1,
         'partner2':partner2,
         'partner1_runs':partnership_info[partner1]["runs"],
@@ -90,7 +91,7 @@ def updatePlayer(Players,partnership_info,partnership):
 
 
 
-def inningsPartnerships(innings1,chased,match_id,pid,Players):
+def inningsPartnerships(innings1,chased,match_id,pid,Players,venue):
     #initializing partnership
     partner1= innings1['0_1']["batsman"]
     partner2=innings1['0_1']["non_striker"]
@@ -107,7 +108,7 @@ def inningsPartnerships(innings1,chased,match_id,pid,Players):
         #check if partnership is broken
         if new_partnership!=partnership:
             all_partnerships.append(
-                loadPartnership(list(partnership),partnership_info,match_id,pid,False))
+                loadPartnership(list(partnership),partnership_info,match_id,pid,False,venue))
             updatePlayer(Players,partnership_info,list(partnership))
             partnership=new_partnership
             partnership_info = getInfo(new_partner1,new_partner2)
@@ -122,7 +123,7 @@ def inningsPartnerships(innings1,chased,match_id,pid,Players):
         else:
             partnership_info[new_partner1]["balls"]+=1
         
-    all_partnerships.append(loadPartnership(list(partnership),partnership_info,match_id,pid,chased))
+    all_partnerships.append(loadPartnership(list(partnership),partnership_info,match_id,pid,chased,venue))
     updatePlayer(Players,partnership_info,list(partnership))
     pid+=1
 
@@ -146,24 +147,25 @@ def main():
     for d in deliveries:
         match_id = d["_id"]
         chased=False
+        venue=d['venue']
         #checking if chasing team has won the match -- to extract finishing partnership
         res=list(Matches.find({'_id':match_id},{'_id':1,'won_by':1}))[0]
         if "won_by" in res:
             if "wickets" in res['won_by']:
                 chased=True
         if "1st_innings" in d:
-            pid,partnerships=inningsPartnerships(d["1st_innings"]["deliveries"],False,match_id,pid,Players)
+            pid,partnerships=inningsPartnerships(d["1st_innings"]["deliveries"],False,match_id,pid,Players,venue)
             all_partnerships+=partnerships
         if "2nd_innings" in d:
-            pid,partnerships=inningsPartnerships(d["2nd_innings"]["deliveries"],chased,match_id,pid,Players)
+            pid,partnerships=inningsPartnerships(d["2nd_innings"]["deliveries"],chased,match_id,pid,Players,venue)
             all_partnerships+=partnerships
 
         #super_overs
         if "super_in1" in d:
-            pid,partnerships=inningsPartnerships(d["super_in1"]["deliveries"],False,match_id,pid,Players)
+            pid,partnerships=inningsPartnerships(d["super_in1"]["deliveries"],False,match_id,pid,Players,venue)
             all_partnerships+=partnerships
         if "super_in2" in d:
-            pid,partnerships=inningsPartnerships(d["super_in2"]["deliveries"],False,match_id,pid,Players)
+            pid,partnerships=inningsPartnerships(d["super_in2"]["deliveries"],False,match_id,pid,Players,venue)
             all_partnerships+=partnerships
 
 
