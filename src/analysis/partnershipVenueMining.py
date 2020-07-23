@@ -1,5 +1,6 @@
 import pymongo
 from itertools import combinations
+
 """
 partnership mining using apriori algorithm
 """
