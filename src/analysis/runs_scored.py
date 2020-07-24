@@ -63,7 +63,7 @@ def main():
         inng='2nd'
 
     ax=df.plot.line(x='overs',y=teams,\
-        title='Average runs scored by teams batting {} the between overs {} and {} in season {} '.format(start,stop,season,inng))
+        title='Average runs scored by teams batting {} between the overs {} and {} in season {} '.format(inng,start,stop,season))
     ax.set_ylabel("average_runs")
     plt.show()
     
