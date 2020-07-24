@@ -3,3 +3,7 @@ db_config = {
     "port": 27017,
     "db": "IPL"
 }
+
+collections = {
+    "centroids": "centroids"
+}
