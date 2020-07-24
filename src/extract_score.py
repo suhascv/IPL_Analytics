@@ -4,7 +4,7 @@ import pymongo
 runs scored by each over at that point of the match
 """
 
-def getDocument(runs,oid,match_id,home_team,away_team,season,batting_team,bowling_team):
+def getDocument(runs,oid,match_id,season,batting_team,bowling_team,inning):
     """
     creates runs_scored instances
     """
@@ -15,12 +15,11 @@ def getDocument(runs,oid,match_id,home_team,away_team,season,batting_team,bowlin
         '_id':oid,
         'match_id':match_id,
         'season':season,
-        'home_team':home_team,
-        'away_team':away_team,
+        'innings':inning,
         'batting_team':batting_team,
         'bowling_team':bowling_team,
         'over':i,
-        'runs':r
+        'runs':r,
         }
         i+=1
         oid+=1
@@ -41,6 +40,7 @@ def getRunsByOver(deliveries):
     for d in deliveries:
         if d[-1]=='1':
             runs_by_over.append(runs)
+            runs=0
         runs+=deliveries[d]["runs"]["total"]
     runs_by_over.append(runs)
     return runs_by_over[1:]
@@ -75,7 +75,7 @@ def main():
                 bowling_team = home_team
             
             runs=getRunsByOver(m['1st_innings']['deliveries'])
-            oid,docs=getDocument(runs,oid,match_id,home_team,away_team,season,batting_team,bowling_team)
+            oid,docs=getDocument(runs,oid,match_id,season,batting_team,bowling_team,1)
             all_overs+=docs
         
         if '2nd_innings' in m:
@@ -86,7 +86,7 @@ def main():
                 bowling_team = home_team
             
             runs=getRunsByOver(m['2nd_innings']['deliveries'])
-            oid,docs=getDocument(runs,oid,match_id,home_team,away_team,season,batting_team,bowling_team)
+            oid,docs=getDocument(runs,oid,match_id,season,batting_team,bowling_team,2)
             all_overs+=docs
         
     Runs_Scored.insert_many(all_overs)
