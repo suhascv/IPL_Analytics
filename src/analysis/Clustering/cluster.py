@@ -126,8 +126,8 @@ def do(k: int, iter: int):
         if update_count == 0:
             break
 
-# def main():
-#     do(10, 1)
+def main():
+     do(10, 10)
 
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+     main()

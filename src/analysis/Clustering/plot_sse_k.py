@@ -28,12 +28,12 @@ def plot_graph(k_SSE_dic: dict):
     plot.clf()
 
 def main():
-    my_dick = {}
+    my_plot = {}
     for k in range(5, 100, 8):
         do(k, 50)
         SSE = get_SSE()
-        my_dick[k] = SSE        
-    plot_graph(my_dick)
+        my_plot[k] = SSE        
+    plot_graph(my_plot)
 
 if __name__ == "__main__":
     main()
