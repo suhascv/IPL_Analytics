@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plot
 from cluster import do, get_groups_points
 
-def get_SSE():
+def get_SSE() -> float:
     SSE = 0
     centroid_groups = get_groups_points()
     for centroid in centroid_groups:
@@ -24,16 +24,16 @@ def plot_graph(k_SSE_dic: dict):
     plot.plot(k_list, SSE_list)
     plot.xlabel('k value')
     plot.ylabel('Sum of squared error')
-    plot.savefig(f'SSE_k_plot.png', format='png')
+    plot.savefig(f'Visualizations/Clustering/SSE_k_plot3.png', format='png')
     plot.clf()
 
 def main():
-    my_dick = {}
-    for k in range(5, 100, 8):
-        do(k, 50)
+    k_SSE_dic = {}
+    for k in range(2, 20, 2):
+        do(k, iter=50)
         SSE = get_SSE()
-        my_dick[k] = SSE        
-    plot_graph(my_dick)
+        k_SSE_dic[k] = SSE        
+    plot_graph(k_SSE_dic)
 
 if __name__ == "__main__":
     main()
