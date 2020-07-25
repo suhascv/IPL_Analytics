@@ -1,5 +1,10 @@
 import pymongo
-from constants import db_config
+
+db_config = {
+    "host": "mongodb://localhost",
+    "port": 27017,
+    "db": "IPL"
+}
 
 def main():
     myClient = pymongo.MongoClient(host=db_config["host"], port=db_config["port"])

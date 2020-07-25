@@ -1,4 +1,5 @@
-import sys, os, inspect
+from sys import argv
+
 from pymongo import MongoClient
 from scipy.spatial import distance
 
@@ -13,8 +14,26 @@ collections = {
     "data": "clustering_data"
 }
 
-server = MongoClient(host=db_config['host'], port=db_config['port'])
-db = server['IPL']
+client = MongoClient(host=db_config['host'], port=db_config['port'])
+db = client['IPL']
+
+def get_command_line_params():
+    arg_len = len(argv)
+
+    k = 0
+    iter = 0
+
+    if arg_len == 3:
+        k = argv[1]
+        iter = argv[2]
+    elif arg_len == 2:
+        k = argv[1]
+        iter = input('Please enter number of iterations: ')
+    else:
+        k = input('Please enter number of clusters: ')
+        iter = input('Please enter number of iterations: ')
+
+    return (int(k), int(iter))
 
 def get_initial_sample(k: int) -> list:
     sample = db.clustering_data.aggregate([
@@ -43,7 +62,7 @@ def insert_centroids(points: list):
 def get_centroids() -> list:
     return list(db.get_collection(collections['centroids']).find({}))
 
-def assign_cluster_centers(docs: list) -> list:
+def assign_cluster_centers(docs: list) -> tuple:
     centroids = get_centroids()
     bulk = db.get_collection(collections['data']).initialize_unordered_bulk_op(True)
     for doc in docs:
@@ -66,10 +85,10 @@ def assign_cluster_centers(docs: list) -> list:
     x = bulk.execute()
     return x['nMatched'], x['nModified']
 
-def get_clustering_data():
+def get_clustering_data() -> list:
     return list(db.get_collection(collections['data']).find())
 
-def get_groups_points():
+def get_groups_points() -> list:
     return list(db.get_collection('centroids').aggregate([
         {
             '$lookup': {
@@ -82,7 +101,7 @@ def get_groups_points():
     ]))
 
 
-def update_centroids():
+def update_centroids() -> tuple:
     centroid_groups = get_groups_points()
 
     bulk = db.get_collection(collections['centroids']).initialize_unordered_bulk_op(True)
@@ -122,12 +141,20 @@ def do(k: int, iter: int):
         match_count, update_count = assign_cluster_centers(docs)
         print(f'Updated {update_count} / {match_count} DOCS with new cluster.')
         match_count, update_count = update_centroids()
-        print(f'Updated {update_count} / {match_count} CENTROIDS with new centroid.')
+        print(f'Updated {update_count} / {match_count} CENTROIDS with new centroid.\n\n')
         if update_count == 0:
             break
 
 def main():
+<<<<<<< HEAD
      do(10, 10)
 
 if __name__ == "__main__":
      main()
+=======
+    k, iterations = get_command_line_params()
+    do(k, iterations)
+
+if __name__ == "__main__":
+    main()
+>>>>>>> bd0863dda3751415472c9a93a6bd944f7a9aa703
