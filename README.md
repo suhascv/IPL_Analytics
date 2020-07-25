@@ -49,5 +49,21 @@ python3 src/Clustering/plot_sse_k.py
 
 Then, select a particular k at the elbow of the plot (saved under `./Visualizations/Clustering`) and run the following:
 ```
-python3 src/Clustering/cluster.py <k-value> <iteration-limit>
+python3 src/analysis/Clustering/cluster.py <k-value> <iteration-limit>
+```
+
+
+### Association:
+ We are going to perform item set mining (apriori) on batting partnerships which has following attributes:
+ * `partners(partner-1 ,partner-2)`
+ * `venue`
+ * `total runs`
+ 
+ Initially, we will filter the partnerships with total runs > 30. The algorithm works sligthly different from usual apriori, here we have fixed number of items in a partnership(transaction), thus the algorithm stops at level 3. The minimum support is set to 15.
+* At Level 1 we will get the the individual players/venues involved in atleast 15 partnerships(30+ run).
+* At Level 2 we will have the player-venue/player1-player2 involved in atleast 15 partnerships(30+ run).
+* At Level 3 we will have the most frequent partnerships(partner1,partner2,venue).
+
+```
+python3 src/analysis/Association/partnershipVenueMining.py
 ```
