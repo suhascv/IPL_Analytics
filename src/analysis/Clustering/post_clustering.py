@@ -45,6 +45,7 @@ def main():
         rank[r['_id']]=points[i]
         i+=1
 
+    print('points assigned for each cluster')
     print(rank)
 
     
@@ -62,7 +63,7 @@ def main():
     }
     ]))[0]['players']
 
-    player_rank={}
+    max_point=0
     player_updates=[]
     for player in all_players:
         
@@ -90,17 +91,29 @@ def main():
         for r in resp:
              total_points+=rank[r['_id']]*r['count']
 
-        player_updates.append({'updateOne':{'pl'}})
-        player_rank[player]=total_points
+        if total_points>max_point:
+            max_point=total_points
         bulk.find({'name':player}).update_one({'$set':{'batting_points':total_points}})
     
     bulk.execute()
+    
+    print('batting_points updated in players collection')
 
+    tier_range=max_point//5
+    upper=max_point
+    lower=max_point-tier_range
+
+    for i in range(1,6):
+        Players.update_many({'batting_points':{'$gt':lower,'$lte':upper}},{'$set':{'batting_tier':i}})
+        upper=lower
+        lower=lower-tier_range
+    
+    print('batting_tier updated in players collection')
+
+        
     
 
     
-
-
 
 
 if __name__ =='__main__':
