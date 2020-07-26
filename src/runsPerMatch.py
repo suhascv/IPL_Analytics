@@ -24,7 +24,7 @@ def updateRuns(deliveries):
         
     return player_score
 
-def getDocs(player_score,venue,opponent,venue_type,innings):
+def getDocs(player_score,venue,opponent,venue_type,season,innings):
     docs=[]
     for player,info in player_score.items():
         doc={}
@@ -32,12 +32,13 @@ def getDocs(player_score,venue,opponent,venue_type,innings):
         doc['opponent']=opponent
         doc['venue_type']=venue_type
         doc['venue']=venue
+        doc['season']=season
         doc['innings']=innings
         doc['runs']=info['runs']
         doc['strike_rate']=round((info['runs']/info['balls'])*100,2)
         doc['sixes']=info['sixes']
         doc['fours']=info['fours']
-
+        
         docs.append(doc)
     
     return docs
@@ -55,7 +56,8 @@ def main():
                         '1st_innings':1,
                         '2nd_innings':1,
                         'home_team':1,
-                        'away_team':1}},
+                        'away_team':1,
+                        'season':1}},
         ])
     data = list(data)
         
@@ -66,6 +68,7 @@ def main():
         away_team=d['away_team']
         venue_type='home'
         venue=d['venue']
+        season=d['season']
         if '1st_innings' in d:
             if d['1st_innings']['team']==home_team:
                 opponent=away_team
@@ -73,7 +76,7 @@ def main():
                 opponent=home_team
                 venue_type='away'
             player_score=updateRuns(d['1st_innings']['deliveries'])
-            docs=getDocs(player_score,venue,opponent,venue_type,1)
+            docs=getDocs(player_score,venue,opponent,venue_type,season,1)
             RunsPerMatch.insert_many(docs)
         if '2nd_innings' in d:
             if d['2nd_innings']['team']==home_team:
@@ -82,7 +85,7 @@ def main():
                 opponent=home_team
                 venue_type='away'
             player_score=updateRuns(d['2nd_innings']['deliveries'])
-            docs=getDocs(player_score,venue,opponent,venue_type,2)
+            docs=getDocs(player_score,venue,opponent,venue_type,season,2)
             RunsPerMatch.insert_many(docs)
         
         

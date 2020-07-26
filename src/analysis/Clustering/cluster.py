@@ -146,15 +146,8 @@ def do(k: int, iter: int):
             break
 
 def main():
-<<<<<<< HEAD
-     do(10, 10)
-
-if __name__ == "__main__":
-     main()
-=======
     k, iterations = get_command_line_params()
     do(k, iterations)
 
 if __name__ == "__main__":
     main()
->>>>>>> bd0863dda3751415472c9a93a6bd944f7a9aa703
