@@ -108,6 +108,8 @@ def main():
     print('number of itemsets before Level1 of apriori :',len(partnerships))
     data=partnerships
     #from level 1 to 3
+
+    
     for i in range(1,4):
         if i==1 or i==2:
             support=10
