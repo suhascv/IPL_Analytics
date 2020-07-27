@@ -20,6 +20,9 @@ execute the codes in the following order to have dataset installed on your local
 python3 src/load_player.py
 ```
 ```
+python3 src/load_matches.py
+```
+```
 python3 src/update_players.py
 ```
 ```
@@ -27,6 +30,9 @@ python3 src/get_partnerships.py
 ```
 ```
 python3 src/extract_score.py
+```
+```
+python3 src/runs_per_match.py
 ```
 
 ## Analysis:
