@@ -2,21 +2,18 @@ from pymongo import MongoClient
 import pandas as pd
 import matplotlib.pyplot as plt
 
-
+"""
+3D plot to visualize the created clsuters
+"""
 
 def main():
     myClient = MongoClient("mongodb://localhost:27017")
     myDb= myClient['IPL']
     RunsScored = myDb['clustering_data']
 
-
+    #fetching the data in form of array
     resp=list(RunsScored.aggregate([
-    {'$sort':{
-        'runs':-1,
-        'strike_rate':-1
-    }
-    },
-
+    
     {
         '$group': {
             '_id': None, 
@@ -45,6 +42,8 @@ def main():
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     
+
+    #preparing data frame
     df_dict={'runs':resp['all_runs'],
             'strike_rate':resp['all_strike_rates'],
             'sixes':resp['all_sixes'],
@@ -52,14 +51,16 @@ def main():
             'fours':resp['all_fours']}
     df=pd.DataFrame(df_dict)
     df['boundaries']=[df['sixes'][i]+df['fours']  for i in range(len(df.sixes))]
+    #markers
     df_dict={1:'o',2:'v',3:'s',4:'^',5:'d'}
     for kind in df_dict:
         d = df[df.cluster==kind]
-        ax.scatter( d.strike_rate, d.runs,d.sixes,
+        ax.scatter( d.runs,d.strike_rate,d.sixes,
                 marker = df_dict[kind])
     ax.set_xlabel('Runs')
     ax.set_ylabel('Strike_Rate')
     ax.set_zlabel('Boundaries')
+    ax.set_title('Clustered Innings')
     plt.show()
     
 

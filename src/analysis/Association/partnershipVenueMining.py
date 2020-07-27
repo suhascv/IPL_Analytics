@@ -3,6 +3,15 @@ from itertools import combinations
 
 """
 partnership mining using apriori algorithm
+Initially, we will filter the partnerships with total runs > 30. 
+The algorithm works sligthly different from usual apriori, 
+here we have fixed number of items in a partnership(transaction),
+thus the algorithm stops at level 3. The minimum support is set to 15.
+
+At Level 1 we will get the the individual players/venues involved in atleast 15 partnerships(30+ run).
+At Level 2 we will have the player-venue/player1-player2 involved in atleast 15 partnerships(30+ run).
+At Level 3 we will have the most frequent partnerships(partner1,partner2,venue)
+(note: at last level we change min support to 5 as the number of matches played by player pair at particular venue decreases).
 """
 
 
@@ -16,6 +25,11 @@ def removeVenue(itemset,venues):
 
 
 def queryGenerator(itemset,venue,min_runs):
+    """
+    returns generalized query to do the following
+        1)to prune invalid candidates.
+        2)to prune candidates(partnership) with runs < min runs.
+    """
     level=len(itemset)
     partners=[[] for k in range(level)]
     for j in range(level):
@@ -37,6 +51,7 @@ def queryGenerator(itemset,venue,min_runs):
 
 
 def getDoucuments(data,level,venues,myCol,min_runs):
+    #generates candidates for level_i
     myDocs = {}
     if level ==1:
         for p in data:
@@ -73,6 +88,7 @@ def getDoucuments(data,level,venues,myCol,min_runs):
 
 
 def pruneCandidates(candidates,min_support):
+    #prunes invalid candidates and candidates with support < min support
     prunedDocs=[]
     for c in candidates:
         if candidates[c]>=min_support:
@@ -107,9 +123,9 @@ def main():
     levels=[]
     print('number of itemsets before Level1 of apriori :',len(partnerships))
     data=partnerships
-    #from level 1 to 3
-
     
+    
+    #from level 1 to 3
     for i in range(1,4):
         if i==1 or i==2:
             support=10
@@ -117,10 +133,14 @@ def main():
             support=5
             
         Level = myDb['level'+str(i)]
+        #generate candidates
         candidates=getDoucuments(data,i,venues,Parnterships,min_runs)
         
+        #prune candidates of level i
         pruned=pruneCandidates(candidates,support)
         print('number of itemsets after Level'+str(i),':',len(pruned))
+        
+        #creating_new_collection for items in each level.
         Level.insert_many(pruned)
 
         resp=list(Level.find({},{'_id':0,'count':0}))

@@ -1,5 +1,12 @@
 from pymongo import MongoClient
 
+"""
+updating the batting points and batting tier of player of latest season(2019)
+Batting points are calculated from clusters
+Batting points for each innings ranges from 2 to 10 depending on which cluster the innings belong
+"""
+
+
 def main():
     myClient = MongoClient('mongodb://localhost:27017')
     myDb = myClient['IPL']

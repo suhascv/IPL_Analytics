@@ -1,6 +1,19 @@
 import pymongo
 
+"""
+Fetching every batting innings of all players across all 12 seasons
+This script prepares data for clustering
+The following attributes are calculated for each player-innings:
+1.Runs                 (Total number of runs scored)
+2.Batting StrikeRate   (Indicates the phase in which the runs were scored)
+3.Sixes                (Number of sixes in an innings)
+4.Fours                (Number of fours in an innings)
+"""
+
 def updateRuns(deliveries):
+    """
+    takes all the deliveries bowled in an innings and calculates runs scored by each player
+    """
     player_score={}
     for d,info in deliveries.items():
         if "extras" in info:
@@ -25,6 +38,9 @@ def updateRuns(deliveries):
     return player_score
 
 def getDocs(player_score,venue,opponent,venue_type,season,innings):
+    """
+    prepares docs required for the collection
+    """
     docs=[]
     for player,info in player_score.items():
         doc={}
