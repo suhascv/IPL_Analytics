@@ -56,4 +56,7 @@ docs/_build/
 # PyBuilder
 target/
 
+src/__pycache__
+src/analysis/Clustering/__pycache__
+
 .vscode

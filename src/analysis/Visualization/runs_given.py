@@ -2,6 +2,16 @@ import pymongo
 import pandas as pd
 import matplotlib.pyplot as plt
 
+
+"""
+runs conceded by teams:
+This is an interactive Visualization Script which produces the line graphs of runs conceded by teams 
+It Takes follwing Input:
+    1) Overs Range(start and stop)
+    2) season range(start and stop)
+    3) Innings (1st or 2nd)
+"""
+
 def main():
     myClient = pymongo.MongoClient("mongodb://localhost:27017")
     myDb= myClient['IPL']
@@ -10,15 +20,16 @@ def main():
 
     start=int(input('enter the starting over(min 1, max 20) :'))
     stop=int(input('enter the ending over (should be greater than the starting over max 20) :'))
-    season=int(input('enter the season between [2008---2019] :'))
+    season_start=int(input('enter the season between [2008---2019] :'))
+    season_stop=int(input('enter the ending over (should be greater than the starting over max 2019) :'))
     innings=int(input('enter innings [1,2] :' ))
 
     avg_overs={'_id':'$team'}
     
     query=[
         {'$match':{
-                'season':season,
-                '$and':[{'over':{'$gte':start}},{'over':{'$lte':stop}}],
+                'season':{'$gte':season_start,'$lte':season_stop},
+                'over':{'$gte':start,'$lte':stop},
                 'innings':innings
                 }
         },
@@ -63,7 +74,7 @@ def main():
         inng='2nd'
 
     ax=df.plot.line(x='overs',y=teams,\
-        title='Average runs given by teams bowling {} between the overs {} and {} in season {} '.format(inng,start,stop,season))
+        title='Average runs given by teams bowling {} between the overs {} and {} in season {}-{} '.format(inng,start,stop,season_start,season_stop))
     ax.set_ylabel("average_runs")
     plt.show()
     
