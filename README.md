@@ -75,4 +75,19 @@ python3 src/analysis/Association/partnershipVenueMining.py
 ```
 ### PeerEval:
  ## Mihir MAnjrekar:
-  * hi
+  * Mining Analysis
+  * Visulization of Attributes and their analysis
+  * small part in pre processing(mainly data cleaning, getting rid of the missing values)
+  * Apriori implementation with suhas
+  * some part in feature analysis( like which feature to select and what feature can be used for visualization)
+  * Implemented extract_score.py, get_partnership.py, runs_per_match.py
+ ## Suhas Chikkanaravangala Vijayakumar:
+  * Mining analysis and Apriori implementation with mihir
+  * Analyzied the dataset for outliers and missing values
+  * I took most of the pre-processing task that we listed during our weekly meetings
+  * Did cluster analysis with Gautuam, also implemented the visualization of the clusters and the ranking system.
+  * Also Implemented load_players.py, ,load_matches.py, update_player.py
+ ## Gautam Gadipudi
+  * Cluster Analysis with suhas, also the task to implemented k-means.
+  * Implemeted normalize_batting_stats.py, plot_sse_k.py,cluster.py
+  * Visulizations of best K value.
